@@ -1,0 +1,26 @@
+<style type="text/css">
+    #slide {
+        text-align: center;
+        width: 100%;
+    }
+    #slide iframe {
+        position: relative;
+        border: none;
+        background: transparent;
+    }
+    #slide h1 {
+        text-align: center;
+    }
+    #slide h1.very-large {
+        font-size: 3em;
+    }
+</style>
+<div id="slide">
+    <iframe scrolling="yes" src="http://www.votelindaellis.com/">
+    </iframe>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $('#slide iframe').width($(window).width()*.8).css({left: '-5%'}).height($(window).height() - $('#title').height());
+    });
+</script>

@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+
+{% block canonical %}
+<link rel="canonical" href="{{BASE_URL}}/"/>
+{% endblock %}
+
+{% block meta %}
+{% endblock %}
+
+{% block content %}
+<div id="connecting">
+    <img class="connecting" src="{{STATIC_URL}}img/loader.gif" alt="Connecting..." />
+    <span class="connecting block">Connecting</span>
+</div>
+
+<div id="title">
+    <h1>{{presentation.title}}</h1>
+    <h2>By Corey Pauley</h2>
+    <div id="messages"></div>
+</div>
+
+<div id="top-menu">
+    <div id="top-options" class="options"></div>
+</div>
+
+<div id="left-menu">
+    <div id="left-options" class="options"></div>
+</div>
+
+<div id="right-menu">
+    <div id="right-options" class="options"></div>
+</div>
+
+<div id="bottom-menu">
+    <div id="bottom-options" class="options"></div>
+</div>
+
+<div id="chunk-box"><br/></div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    (function($){
+        $(function(){
+            // Commonly used selectors
+            var $messages = $('#messages'),
+            $chunkBox = $('#chunk-box'),
+            $body = $('body'),
+            $window = $(window);
+
+            // Update the main content with a new chunk
+            function updateChunk(data) {
+                if(data.prescript) {
+                    $.globalEval(data.prescript);
+                }
+                $chunkBox.animate({opacity: 0}, 300, function(){
+                    $chunkBox.html(data.html);
+                    setTimeout(function(){
+                        $chunkBox.css({'margin-top': '-'+($chunkBox.height()/2)+'px', 'margin-left': '-'+($chunkBox.width()/2)+'px'}).delay(10).animate({opacity: 1}, 500, function(){
+                            if(data.postscript) {
+                                $.globalEval(data.postscript);
+                            }
+                        });
+                    }, 100);
+                });
+            }
+
+            // Timeout for loading graphic
+            setTimeout(function() {
+
+                // Socket.io Connection
+                var socket = io.connect('http://192.168.1.68:8000');  
+
+                    socket.on('connect', function() {
+                        // Remove connecting graphic
+                        $('#connecting').animate({opacity: 0}, 500, function(){
+                            $(this).remove();
+                        });
+
+                        {% if user.admin %}
+
+                        // Connect as admin
+                        socket.emit('connect as admin', '{{userJSON}}');
+
+                        // Add to the users options
+                        $('#bottom-options').prepend('<h2>Users</h2>').on('click', '.option', function(e){
+                            var $el = $(this);
+                            socket.emit($el.data('action'), $el.data());
+                            return false;
+                        });
+
+                        {% else %}
+
+                        // Check the current state to find out what to do
+                        socket.emit('connect as participant', '{{userJSON}}');
+
+                        {% endif %}
+
+                        // Determine and set chunk height/width
+                        var chunkHeight = $window.height() - $('#title').height(),
+                        chunkWidth = $window.width() - $('#left-menu').width() - $('#right-menu').width();
+                        socket.emit('chunk height', chunkHeight);
+                        socket.emit('chunk width', chunkWidth);
+                        $chunkBox.css({'max-height': chunkHeight});
+                    });
+
+                    {% if user.admin %}
+                    // Listen for left examples init
+                    socket.on('push left examples', function(data){
+                        socket.emit('push left examples', data);
+                    });
+
+                    // Listen for right examples init
+                    socket.on('push right examples', function(data){
+                        socket.emit('push right examples', data);
+                    });
+
+                    // New participant
+                    socket.on('new participant', function(user){
+                        $('#bottom-options').append($('<a id="user-'+user.socket+'" class="option button green regular raised" href="chunks/participant.html" data-path="chunks/participant.html" data-user="'+JSON.stringify(user)+'" data-name="'+user.name+'" data-socket="'+user.socket+'" data-action="user chunk">'+user.name+'</a>'));
+                    });
+
+                    // Participant disconnect
+                    socket.on('participant disconnect', function(user){
+                        $('#bottom-options #user-'+user.socket).remove();
+                    });
+
+                    // Add user examples
+                    socket.on('add user examples', function(data){
+                        $('#admin .examples').append('<h3>{title}</h3>{options}'.assign({
+                            title: data.title,
+                            options: data.options.reduce(function(str, option){
+                                return str + '<a class="option button green regular raised" href="{path}" data-path="{path}" data-socket="{socket}" data-action="{action}">{name}</a>'.assign({
+                                    path: option.path,
+                                    socket: data.socket,
+                                    action: option.action,
+                                    name: option.name
+                                });
+                            },'')
+                        }));
+                    });
+
+                    // Add user slides
+                    socket.on('addd user slides', function(data){
+                    });
+                    {% endif %}
+
+                    // Start listening for form submittions
+                    $chunkBox.on('submit', 'form', function(e){
+                        var $el = $(this),
+                        data = JSON.stringify({form: $el.data('name'), values: $el.serializeArray().reduce(function(vals, val){
+                                vals[val.name] = val.value;
+                                return vals;
+                            }, {})});
+                        socket.emit('post', data);
+                        // Clear form
+                        $el.find('input:text, input:password, input:file, select, textarea').val('').end().find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+                        return false;
+                    }); 
+
+                    // Start listening for option clicks
+                    $chunkBox.on('click', '.option', function(e){
+                        var $el = $(this);
+                        socket.emit($el.data('action'), $el.data());
+                        return false;
+                    });
+
+                    // Handle shouts
+                    socket.on('shout', function(data) {
+                        var chunkOffset = $chunkBox.offset(),
+                        yMin = $('#title').height(),
+                        yTopStop = chunkOffset.top,
+                        yBtmStop = chunkOffset.top + $chunkBox.height(),
+                        yMax = $window.height() - 75 - ($chunkBox.height()),
+                        xMin = 0,
+                        xLftStop = chunkOffset.left,
+                        xRhtStop = chunkOffset.left + $chunkBox.width(),
+                        xMax = ($window.width() - 75) - ($chunkBox.width()),
+                        xPos = Math.floor((Math.random()*xMax)),
+                        yPos = Math.floor((Math.random()*(yMax-yMin)) + yMin),
+                        color = ['aqua', 'azure', 'blueviolet', 'brown', 'chartreuse', 'coral', 'crimson', 'darkgoldenrod', 'darkgreen', 'darkkhaki', 'darkorange', 'deeppink', 'darkviolet', 'firebrick', 'floralwhite', 'fuchsia', 'gold', 'greenyellow', 'honeydew', 'lawngreen', 'magenta', 'orangered', 'peru', 'palegreen', 'springgreen', 'silver'][Math.floor(Math.random()*26)],
+                        msg = $('<p class="shout">' + data.msg + '<br/>&nbsp;&nbsp;&nbsp;-'+data.name+'</p>').css({'max-width': '100px', color: color, position: 'absolute', top: ((yPos > yTopStop && yPos < yBtmStop) ? yPos + ($chunkBox.height()) : yPos) + 'px', left: ((xPos > xLftStop && xPos < xRhtStop) ? xPos + ($chunkBox.width()) : xPos) + 'px'}).appendTo($('body'));
+                        setTimeout(function(){
+                            msg.animate({opacity: 0}, 500, function(){
+                                $(this).remove();
+                            });
+                        }, 1000);
+                    });
+
+                    // Handle a simple message
+                    socket.on('msg', function(data) {
+                        $messages.html('<p class="message">' + data.msg + '</p>');
+                        if(data.duration) {
+                            setTimeout(function(){
+                                $messages.children().animate({opacity: 0}, 750, function(){
+                                    $(this).remove();
+                                });
+                            }, data.duration);
+                        }
+                    });
+
+                    // Handle a chunk update
+                    socket.on('chunk', function(data) {
+                        updateChunk(data);
+                    });
+
+                    // Handle slide push
+                    socket.on('slide', function(path) {
+                        socket.emit('request chunk', path);
+                    });
+
+                    // Handle new options
+                    socket.on('update options', function(data) {
+                        if(data.reset || data.clear) {
+                            $('#left-options').add($('#right-options')).add($('#top-options')).add($('#bottom-options')).html('');
+                            if(data.reset) {
+                                socket.emit('request chunk', 'chunks/welcome.html');
+                            }
+                            return;
+                        }
+                        var options_box = $('#' + (typeof data.menu !== 'undefined' ? data.menu : 'right') + '-options');
+                        options_box.html($('<h2>{title}</h2>'.assign({title: data.title || 'Options'}) + data.options.reduce(function(str, option){
+                            return str + '<a id="option-"{id}" class="option button regular green raised" href="{path}" data-path="{path}" data-name="{name}" data-action="{action}" data-id="{id}">{name}</a>'.assign({
+                                id: option.id,
+                                path: option.path || '#0',
+                                name: option.name,
+                                action: option.action
+                            });
+                        }, '') + '<div class="clearfix"></div>')).css({'margin-top': '-'+((data.menu !== 'undefined' && (data.menu === 'top' || data.menu === 'bottom')) ? 0 : options_box.height()/2)+'px'}).fadeIn(500, function(){
+                            var $options = $(this);
+                            $options.on('click', 'a.option', function(e){
+                                $el = $(this);
+                                {% if user.admin %}
+                                switch($el.data('action')) {
+                                    case 'push slide':
+                                        if(!$el.hasClass('active')) {
+                                            $el.siblings('.active').removeClass('active').end().addClass('active');
+                                        }
+                                        socket.emit('push slide', $el.data('path'));
+                                        break;
+                                    case 'push left examples':
+                                        if(!$el.hasClass('active')) {
+                                            socket.emit('push left examples', {path: $el.data('path')});
+                                            $el.siblings('.active').removeClass('active').end().addClass('active');
+                                        }
+                                        break;
+                                    case 'push right examples':
+                                        if(!$el.hasClass('active')) {
+                                            socket.emit('push right examples', {path: $el.data('path')});
+                                            $el.siblings('.active').removeClass('active').end().addClass('active');
+                                        }
+                                        break;
+                                    default:
+                                        socket.emit('action', $el.data('name'), function(data) {
+                                            $.globalEval(data);
+                                        });
+                                        break;
+                                }
+                                {% else %}
+                                switch($el.data('action')) {
+                                    case 'request chunk':
+                                        if(!$el.hasClass('active')) {
+                                            socket.emit('request chunk', $el.data('path'));
+                                            $el.siblings('.active').removeClass('active').end().addClass('active');
+                                        }
+                                        break; 
+                                    default:
+                                        socket.emit('action', $el.data('name'), function(data) {
+                                            $.globalEval(data);
+                                        });
+                                        break;
+                                }
+                                {% endif %}
+
+                                // Only let the event bubble if the option is an outbound link
+                                if($el.data('action') !== 'outbound') {
+                                    return false;
+                                }
+                            });
+                        });
+                    });
+
+                    socket.on('enable click bang', function(){
+                        socket.on('click bang', function(pos){
+                            $('<img src="{{STATIC_URL}}img/click-bang.png" alt="bang" />').css({display: 'block', height: '0', position: 'absolute', top: pos.y + '%', left: pos.x + '%'}).appendTo($('body')).animate({height: '+=60px', left: '-=30px', top: '-=30px'}, 150, function(){
+                                $(this).animate({opacity: 0}, 100, function(){
+                                    $(this).remove();
+                                });
+                            });
+                        });
+                    }); 
+
+                    socket.on('disable click bang', function(){
+                        socket.removeAllListeners('click bang')
+                    });
+
+                    // Mouse click animation and broadcast
+                    $(document).click(function(e){
+                        var x = e.pageX / $(window).width() * 100,
+                        y = e.pageY / $(window).height() * 100;
+                        socket.emit('click bang', {x: x, y: y});
+                    });
+
+                    // Redirect on disconnect to clear redis store
+                    socket.on('disconnect', function(){
+                        console.log('disconnecting');
+                        window.location.href = '/disconnect';
+                    });
+            }, 2500);
+        });
+    })(jQuery);
+</script>
+{% endblock %}

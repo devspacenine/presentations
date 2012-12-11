@@ -1,0 +1,23 @@
+<style type="text/css">
+    #welcome {
+        text-align: center;
+    }
+    #welcome h2.or {
+        margin: 1.5em 0;
+    }
+    #shout-out {
+        text-align: center;
+    }
+    #shout-out input {
+        width: 50%;
+        margin: 0 auto;
+    }
+</style>
+<div id="welcome">
+    <p>Welcome! We are waiting for more participants. Until then, click around and see what happens.</p>
+    <h2 class="or">-OR-</h2>
+    <p>Shout out to the other participants that are waiting.</p>
+    <form id="shout-out" class="emit" method="POST" action="/presentation" data-name="shout">
+        <input id="id_msg" type="text" name="msg" laceholder="Shout something..." autocomplete="off" required="true" maxlength="50" autofocus="autofocus"></input>
+    </form>
+</div>

@@ -1,0 +1,72 @@
+{
+  "name": "presentation-interactivewebdesign",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "3.x.x",
+    "mongodb": "1.x.x",
+    "mongoose": "3.x.x",
+    "mongoose-form-factory-types": "1.x.x",
+    "mongoose-attachments": "0.0.2",
+    "mongoose-validator": "0.x.x",
+    "passport": "0.x.x",
+    "passport-local": "0.x.x",
+    "passport-facebook": "0.x.x",
+    "passport-google": "0.x.x",
+    "express-helpers": "1.x.x",
+    "nunjucks": "0.1.5",
+    "connect": "2.x.x",
+    "connect-redis": "1.x.x",
+    "underscore": "1.x.x",
+    "async": "0.x.x",
+    "node-uuid": "1.x.x",
+    "email": "0.x.x",
+    "sugar": "1.x.x",
+    "hiredis": "0.x.x",
+    "redis": "0.5.11",
+    "nodemailer": "0.x.x",
+    "socket.io": "0.x.x",
+    "bson": "0.1.5",
+    "connect-flash": "0.x.x"
+  },
+  "engine": "node >= 0.8.1",
+  "description": "A presentation on interactive web design.",
+  "main": "server.js",
+  "devDependencies": {},
+  "keywords": [
+      "presentation",
+      "corey",
+      "pauley",
+      "corey pauley",
+      "yeluapyeroc",
+      "imaginuity",
+      "design",
+      "development",
+      "interactive web design",
+      "responsive web design",
+      "javascript",
+      "css3",
+      "css",
+      "html5",
+      "mobile",
+      "mobile web"
+  ],
+  "author": {
+  	"name": "Corey Pauley",
+	"email": "corey.pauley@imaginuity.com"
+  },
+  "contributors": [
+  	{
+		"name": "Corey Pauley",
+		"email": "corey.pauley@imaginuity.com"
+	},
+    {
+        "name": "John Macon",
+        "email": "jcmacon@gmail.com"
+    }
+  ],
+  "license": "BSD"
+}

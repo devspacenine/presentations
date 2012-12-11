@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block canonical %}
+<link rel="canonical" href="{{BASE_URL}}/"/>
+{% endblock %}
+
+{% block meta %}
+{% endblock %}
+
+{% block content %}
+
+<div id="title">
+    <h1>Imaginuity Interactive</h1>
+    <h2>Innovation Roundtable</h2>
+    <div id="messages"></div>
+</div>
+
+<div id="home-box">
+    <form id="login" method="POST" action="/presentation">
+
+        <input type="hidden" id="id_sessionId" name="sessionId" value="{{sessionId}}"></input>
+
+        <label for="id_presentation_key">Presentation Key</label>
+        <input id="id_presentation_key" type="text" name="presentation_key" placeholder="Key..." autofocus="autofocus" autocomplete="off" required="true"></input>
+    
+        {% if error == "connect" %}
+            <label for="id_presentation_key" class="error">The presentation has not been started yet.</label>
+        {% endif %}
+
+        <input id="submit" type="submit" value="Connect"></input>
+
+    </form>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+</script>
+{% endblock %}

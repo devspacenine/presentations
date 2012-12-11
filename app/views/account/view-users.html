@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block canonical %}
+<link rel="canonical" href="{{BASE_URL}}/register/"/>
+{% endblock %}
+
+{% block meta %}
+{% endblock %}
+
+{% block content %}
+
+{% for user in users %}
+<p>{{user.username}}</p>
+{% endfor %}
+
+{% endblock %}
+
+<script type="text/javascript">
+{% block script %}
+{% endblock %}
+</script>

@@ -1,0 +1,22 @@
+<style type="text/css">
+    #welcome {
+        text-align: center;
+        width: 300px;
+    }
+    #welcome h2 {
+        margin: 1em 0;
+    }
+    #get-name {
+        text-align: center;
+    }
+    #get-name input {
+        width: 100%;
+        margin: 0 auto;
+    }
+</style>
+<div id="welcome">
+    <h2>Who are you?</h2>
+    <form id="get-name" class="emit" method="POST" action="/presentation" data-name="get-name">
+        <input id="id_name" type="text" name="name" placeholder="Name/Nickname" autocomplete="off"></input>
+    </form>
+</div>

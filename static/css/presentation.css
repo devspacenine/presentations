@@ -1,0 +1,194 @@
+@font-face {
+    font-family: 'WebSymbolsRegular';
+    src: url('/static/fonts/websymbols-regular-webfont.eot');
+    src: url('/static/fonts/websymbols-regular-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/static/fonts/websymbols-regular-webfont.woff') format('woff'),
+    url('/static/fonts/websymbols-regular-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    background: transparent url('/static/img/bg-pattern.png') repeat 0 0;
+    color: #ffffff;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+a {
+    color: #ffffff;
+    text-decoration: none;
+    border-bottom: 1px dotted #ffffff;
+}
+
+a:hover {
+    text-decoration: none;
+    border-bottom: 1px solid #ffffff;
+}
+
+a.button, a.button:hover {
+    border: none;
+}
+
+.error {
+    color: red;
+}
+
+.slide-center {
+    text-align: center;
+}
+
+.loading-bg {
+    background: transparent url('/static/img/loading-bg.png') no-repeat center center;
+}
+
+#home-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    margin-left: -200px;
+    max-width: 70%;
+}
+
+#home-box label, #home-box input {
+    margin: 1em 0;
+}
+
+#connecting { 
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    width: 220px;
+    height: 47px;
+    margin-top: -23px;
+    margin-left: -110px;
+}
+
+h1 {
+    font-family: 'Fancy', serif;
+}
+
+h2 {
+    font-family: 'FancyItalic', serif;
+}
+
+#title {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    text-align: center;
+}
+
+#title h1 {
+    font-size: 3em;
+    margin: .5em 0 0 0;
+    text-align: center;
+    line-height: 1em;
+}
+
+#title h2 {
+    text-align: center;
+    margin: .2em 0 1.5em 0;
+    line-height: 1em;
+}
+
+#messages {
+    text-align: center;
+}
+
+#top-menu, #bottom-menu {
+    position: fixed;
+    width: 70%;
+    left: 15%;
+}
+
+#top-menu {
+    top: 7em;
+}
+
+#bottom-menu {
+    bottom: 0;
+}
+
+#left-menu {
+    position: fixed;
+    left: 5px;
+    height: 100%;
+    width: 15%;
+}
+
+#right-menu {
+    position: fixed;
+    right: 5px;
+    height: 100%;
+    width: 15%;
+}
+
+#right-options, #left-options {
+    width: 100%;
+    position: relative;
+    top: 50%;
+}
+
+#top-options, #bottom-options {
+    position: relative;
+}
+
+#top-options .option, #right-options .option, #bottom-options .option, #left-options .option, #chunk-box .option {
+    font-size: 0.9em;
+}
+
+/* Left and Right Option Bars */
+
+#right-options h2, #left-options h2, #top-options h2, #bottom-options h2 {
+    text-align: center;
+}
+
+#right-options .option, #left-options .option {
+    display: inline-block;
+    width: 96%;
+    margin: .5em auto;
+}
+
+@media all and (min-width: 1666px) {
+    #right-options .option, #left-options .option {
+        width: 46%;
+        margin: .5em 2%;
+    }
+
+    #right-options .option:last-of-type {
+        float: right;
+    }
+}
+
+/* Top and Bottom Option Bars */
+#top-options .option, #bottom-options .option, #chunk-box .option {
+    display: inline-block;
+    margin: .5em;
+}
+
+#chunk-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    max-width: 70%;
+    text-align: center;
+}
+
+#chunk-box p {
+    margin: 0;
+}
+
+#chunk-box form {
+    margin: 1em 0;
+}
+
+.option {
+    margin: .5em 0;
+    text-align: center;
+    font-size: 1.2em;
+}

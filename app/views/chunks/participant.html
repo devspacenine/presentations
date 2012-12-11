@@ -1,0 +1,26 @@
+<style type="text/css">
+    #user-admin {
+        text-align: center;
+    }
+    #user-admin .option {
+        display: inline-block;
+        margin: .25em .5em;
+    }
+</style>
+<div id="user-admin">
+    <h2>User Info &amp; Actions</h2>
+    <div class="info">Name - {{user.name}}</div>
+    <div class="info">Session Id - {{user.sessionId}}</div>
+    <div class="info">Socket Id - {{user.socket}}</div>
+    <a class="option button green regular raised" href="/disconnect" data-value="{{user.socket}}" data-path="/disconnect" data-name="kick" data-action="kick">Kick</a>
+    <form id="message-user" action="/presentation" method="POST" data-name="message user">
+        <label for="id_msg">Send Message to Participant</label>
+        <input id="id_msg" type="text" name="msg" placeholder="Message..." autocomplete="off" required="true" maxlength="50" autofocus="autofocus"></input>
+    </form>
+    <div class="slides">
+        <h3><a class="expand option" href="#0" data-action="expand user slides" data-socket="{{user.socket}}">Slides</a></h3>
+    </div>
+    <div class="examples">
+        <h3><a class="expand option" href="#0" data-action="expand user examples" data-socket="{{user.socket}}">Examples</a></h3>
+    </div>
+</div>
