@@ -1,11 +1,14 @@
+/*
 var mongoose = require('mongoose'),
 models = app.get('models'),
 User = models.User;
 
 module.exports = (function(){
+*/
     /********************************************************************
     * GET register page.
     ********************************************************************/
+    /*
     app.get('/register/', function(req, res) {
         User.ModelForm('register', function(err, form) {
             res.render('account/register.html', {
@@ -13,10 +16,12 @@ module.exports = (function(){
             });
         });
     });
+    */
 
     /********************************************************************
     * POST register page.
     ********************************************************************/
+    /*
     app.post('/register/', function(req, res) {
         User.ModelForm(req, 'register', function(err, form) {
             form.setForm('register');
@@ -42,13 +47,16 @@ module.exports = (function(){
             });
         });
     });
+    */
 
     /********************************************************************
     * GET view users.
     ********************************************************************/
+    /*
     app.get('/view-users/', function(req, res) {
         res.render('account/view-users.html', {
             users: User.find({})
         });
     });
 })();
+*/

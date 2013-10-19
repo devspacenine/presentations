@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
 plugins = require('../_plugins'),
-FormFactory = require('/home/yeluapyeroc/workspace/Node Workspaces/Packages/mongoose-form-factory'),
+FormFactory = require('/home/cpauley/src/mongoose-form-factory'),
 Schema = mongoose.Schema,
 ObjectId = Schema.Types.ObjectId,
 Mixed = Schema.Types.Mixed,
